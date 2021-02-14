@@ -1,7 +1,8 @@
 
 
 from typing import List  # noqa: F401
-from os import system
+import os
+import subprocess
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -69,6 +70,8 @@ groups = [ Group(str(i)) for i in (1, 2, 3, 4, 5, 6, 7, 8, 9)]
 
 
 
+
+
 for i in groups:
     keys.extend([
         # mod1 + letter of group = switch to group
@@ -131,8 +134,34 @@ screens = [
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                # widget.TextBox("default config", name="default"),
-                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                widget.TextBox(),
+                widget.TextBox(),
+                widget.Cmus(
+                    font = 'fontawesome',
+                    fontsize = 13,
+                    fontshadow = None,
+                    foreground = 'ffffff',
+                    markup = True,
+                    max_chars = 0,
+                    mouse_callbacks = {},
+                    noplay_color = 'cecece',
+                    padding = None,
+                    play_color = '00ff00',
+                    update_interval = 0.5,
+                ),
+
+                widget.KeyboardLayout(
+                    configured_keyboards = ['br'],
+                    display_map = {},
+                    fmt = '{}',
+                    font = 'fontawesome',
+                    fontsize = 13,
+                    foreground = "#f0ec0a",
+                    mouse_callbacks = {},
+                    option = None,
+                    update_interval = 1,
+
+                ),
                 widget.Net(
                     format = ' {down} ↓↑ {up}',
                     interface = None,
@@ -147,11 +176,13 @@ screens = [
                     
                     font = 'fontawesome',
                     format = ' {MemUsed}M/{MemTotal}M',
-                    update_interval = 1,
+                    update_interval = 0.1,
                     fontsize = 13,
                     foreground = '#f0280a',
                     background = None,
                 ),
+                
+
                 widget.CPU(
                     format = ' {freq_current}GHz {load_percent}%',
                     font = 'fontawesome',
@@ -169,6 +200,8 @@ screens = [
                     font = 'fontawesome',
                     fontsize = 13,
                 ),
+                
+
                 widget.Volume(
                     cardid = None,
                     channel = 'Master',
@@ -222,9 +255,9 @@ focus_on_window_activation = "smart"
 
 
 # Start com linux
-system("compton &")
-system("nitrogen --restore &")
-system("/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &")
-
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser('~')
+    subprocess.Popen([home + '/.config/qtile/autostart.sh'])
 
 wmname = "qtile"
