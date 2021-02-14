@@ -1,4 +1,4 @@
 #!/bin/bash
 compton &
-nitrogen --restore &
+~/.fehbg & 
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
